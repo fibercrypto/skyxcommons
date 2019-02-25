@@ -72,8 +72,7 @@ paths:
       responses:
         default:
           $ref: '#/components/schemas/genericError'
-
-  /api/balances/{address}/observation:
+          
     post:
       summary: Create balance observation
       
