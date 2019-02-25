@@ -1,1 +1,69 @@
+openapi: 3.0.0
+info:
+  title: Python to .Net
+  description: Still whitout description.
+  version: 0.25.1
+servers:
+- url: http://www.skycoin.net
+  description: Main Skycoin server
+- url: http://staging.node.skycoin.net
+  description: Internal staging server for developer.
+components:
+  securitySchemes:
+    CsrfTokenAuth:        # arbitrary name for the security scheme
+      type: apiKey
+      in: header       # can be "header", "query" or "cookie"
+      name: X-CSRF-TOKEN  # name of the header, query parameter or cookie
+  schemas:
+    genericError:
+      description: This is a generic error that should be default response
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int64
+        message:
+          type: string
+paths:
+  /api/sign:
+    post:
+      summary: Sign transaction method.
+      
+      description: Should sign given transaction with the given private key.
+      
+      security:
+      - CsrfTokenAuth: []
+      
+      requestBody:
+            description: 'A JSON object containing: The Private Keys, which were returned by the [POST] /api/wallets. Multiple keys can be used for transactions with multiple inputs. The Transaction Context in the blockchain specific format [POST] /api/transactions or  [PUT] /api/transactions.'
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    privateKeys:
+                      type: array
+                      items:
+                        type: string
+                    transactionContext:
+                      type: string
+                      
+      responses:
+        '200':    # status code
+          description: Signed transaction, which will be used to broadcast the transaction [PUT] /api/transactions/broadcast
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  signedTransaction:
+                    type: string
+        default:
+          $ref : '#/components/schemas/genericError'
+
+# To remember :
+#  Every post method should use security schema.
+#  Feel free to use and reuse components
+#  I think, at some point, someone should use oneOf and anyOf, pls take a look
  
