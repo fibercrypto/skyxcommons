@@ -1,4 +1,5 @@
 openapi: 3.0.0
+
 info:
   title: Python to .Net
   description: Still whitout description.
@@ -24,7 +25,96 @@ components:
           format: int64
         message:
           type: string
+
 paths:
+  /api/transactions/broadcast/many-outputs/{operationId}:
+    get:
+      summary: Return broadcasted transactions by operation ID.
+      
+      description: Should return broadcasted transaction by operation ID . All transactions with many outputs, that were broadcasted by the [POST] /api/transaction/broadcast should be available here.
+      
+      security: 
+      - CsrfTokenAuth: []
+      
+      parameters: 
+      - name: operationId
+        in: path
+        description: Operation ID.
+        required: true
+        schema:
+          type: string
+        
+      
+      responses:
+        '200':
+          description: Broadcasted transactions by Operation ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  operationId:
+                    type: string
+                    description: Operation ID.
+                    
+                  state:
+                    type: string
+                    enum:
+                    - inProgress
+                    - completed
+                    - failed
+                    description: State of the transaction.
+                    
+                  timestamp:
+                    type: string
+                    format: date-time
+                    description: 'Transaction moment as ISO 8601 in UTC.'
+                    
+                  fromAddress:
+                    type: string
+                    description: Source address.
+                  
+                  outputs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        toAddress:
+                          type: string
+                          description: Destination address.
+                        amount:
+                          type: string
+                          description: Actual amount that is transferred to the toAddress. Integer as string, aligned to the asset accuracy.
+                    description: Destinations. Should be non null if the  state is Completed.
+                  
+                  fee:
+                    type: string
+                    description: Fee. Is integer as string, aligned to the asset accuracy.
+                  
+                  hash:
+                    type: string
+                    description: Transaction hash as base64 string. Can be empty. Should be non empty if the  state is  Completed.
+                    
+                  error:
+                    type: string
+                    description: Error description. Can be empty. Should be non empty if the  state is  Error
+                    
+                  errorCode:
+                    type: string
+                    enum:
+                    - unknown
+                    - amountIsTooSmall
+                    - notEnoughBalance
+                    description: Error code. Can be empty. Should be non empty if the state is Failed.
+                    
+                  block:
+                    type: integer
+                    format: int64
+                    description: Incremental ID of the moment, when the transaction state changing is detected. It should be the same sequence as for block in the  [GET] /api/balances response. In other words block number/height.
+                  
+        default:
+          $ref : '#/components/schemas/genericError'
+      
   /api/sign:
     post:
       summary: Sign transaction method.
@@ -66,4 +156,3 @@ paths:
 #  Every post method should use security schema.
 #  Feel free to use and reuse components
 #  I think, at some point, someone should use oneOf and anyOf, pls take a look
- 
