@@ -52,6 +52,26 @@ paths:
                     type: string
         default:
           $ref : '#/components/schemas/genericError'
+          
+  /api/balances/{address}/observation:
+    delete:
+      summary: Delete observation
+      description: Should forget the wallet address and stop observing its balance.
+      
+      security:
+      - CsrfTokenAuth: []
+      
+      parameters:
+        - name: address
+          in: path
+          required: true
+          description: Address of the wallet
+          schema:
+            type: string
+      
+      responses:
+        default:
+          $ref: '#/components/schemas/genericError'
 
 # To remember :
 #  Every post method should use security schema.
