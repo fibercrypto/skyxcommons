@@ -73,6 +73,27 @@ paths:
         default:
           $ref: '#/components/schemas/genericError'
 
+  /api/balances/{address}/observation:
+    post:
+      summary: Create balance observation
+      
+      description: Should remember the wallet address to observe the wallet balance and return it in the [GET] /api/balances , if the balance is non zero.
+      
+      security: 
+      - CsrfTokenAuth: []
+      
+      parameters: 
+      - name: address
+        description: Address of the wallet
+        in: path
+        required: true
+        schema:
+          type: string
+          
+      responses:
+        default:
+          $ref: '#/components/schemas/genericError'
+
 # To remember :
 #  Every post method should use security schema.
 #  Feel free to use and reuse components
