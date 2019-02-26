@@ -34,7 +34,8 @@ components:
           type: guid
         timespam:
           description: Transaction moment as ISO 8601 in UTC
-          type: datetime
+          format: date-time
+          type: string
         fromAddress:
           description: Source address
           type: string
