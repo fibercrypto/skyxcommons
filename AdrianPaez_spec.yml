@@ -24,6 +24,33 @@ components:
           format: int64
         message:
           type: string
+    
+    transaction:
+      description: Represents a transiction
+      type: object
+      properties:
+        operationId:
+          description: Operation ID. Can be empty. Should be not empty for  ransactions that broadcasted using this Blockchain.Api
+          type: guid
+        timespam:
+          description: Transaction moment as ISO 8601 in UTC
+          type: datetime
+        fromAddress:
+          description: Source address
+          type: string
+        toAddress:
+          description: Destination address
+          type: string
+        assetId:
+          description: Asset ID e.g. SKY
+          type: string
+        ammount:
+          description: Amount without fee. Is integer as string, aligned to the asset accuracy. Actual value can be calculated as x = sourceAmount * (10 ^ asset.Accuracy)
+          type: string
+        hash:
+          description: Transaction hash as base64 string
+          type: string
+
 paths:
   /api/wallets:
     post:
