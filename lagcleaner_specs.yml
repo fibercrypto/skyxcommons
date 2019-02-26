@@ -47,13 +47,6 @@ paths:
           '200':
             description: Successfully stored in observation list.
 
-          '409':
-            description: Transactions to the address are already observed.
-            content:
-              application/json:
-                schema:
-                  type: string
-        
           default:
             $ref: '#/components/schemas/genericError'
   # - 17
@@ -77,14 +70,7 @@ paths:
         responses:
           '200':
             description: Successfully stored in observation list.
-            
-          '409':
-            description: Transactions from the address are already observed.
-            content:
-              application/json:
-                schema:
-                  type: string
-        
+
           default:
             $ref: '#/components/schemas/genericError'
   # - 18
@@ -108,13 +94,6 @@ paths:
         responses:
           '200':
             description: Successfully removed from broadcasted transactions list.
-            
-          '204':
-            description: Specifieed transaction not found.
-            content:
-              application/json:
-                schema:
-                  type: string
-        
+    
           default:
             $ref: '#/components/schemas/genericError'
