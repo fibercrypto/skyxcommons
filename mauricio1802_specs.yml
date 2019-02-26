@@ -92,7 +92,7 @@ paths:
           $ref : '#/components/schemas/genericError'
           
           
-  /api/balances:      #issue 9
+  /api/balances:
     get:
       summary: Return balance of the observed wallets
       description: Should return balances of the observed wallets with non zero balances. Wallets balance observation is enabled by the [POST] /api/balances/{address}/observation and disabled by the [DELETE] /api/balances/{address}/observation.
@@ -143,7 +143,7 @@ paths:
                           description: Balance is integer as string, aligned to the asset accuracy. Actual value can be calculated as x = sourceBalance * (10 ^ asset.Accuracy)Balance is integer as string, aligned to the asset accuracy. Actual value can be calculated as x = sourceBalance * (10 ^ asset.Accuracy)
                           type: string
                         block:
-                          description: Incremental ID of the moment, when balance is updated. It should be the same sequence as for block in the []GET] /api/transactions/broadcast/* responses
+                          description: Incremental ID of the moment, when balance is updated. It should be the same sequence as for block in the [GET] /api/transactions/broadcast/* responses
                           type: integer
                         
                         
@@ -151,7 +151,75 @@ paths:
                   
         default:
           $ref : '#/components/schemas/genericError'
-        
+          
+          
+  /api/transaction/many-inputs:
+    post:
+      summary: Build not signed transactions with many inputs.
+      description: Should build not signed transaction with many inputs. If the transaction with the specified operationId has already been built by one of the [POST] /api/transactions/* call, it should be ignored
+      
+      security:
+        - CsrfTokenAuth: []
+    
+      requestBody:
+        required: true
+        description: Transaction object
+        content:
+          application/json:
+            schema:
+              description: ewr
+              type: object
+              properties:
+                operationId:
+                  description: Operation ID
+                  type: string
+              
+                inputs:
+                  description: Sources
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      fromAddress:
+                        description: Source Address
+                        type: string
+                      amount:
+                        description: Amount to transfer from the  fromAddress. Integer as string, aligned to the droplet precision exponent. Actual value can be calculated as x = amount / (10 ^ asset.Accuracy).
+                        type: string
+
+                toAddress: 
+                  description: Destination Address
+                  type: string
+                assetId: 
+                  description: Ticker ID of the fiber coin, SKY by default
+                  type: string
+                  
+                  
+      responses:
+        '200':    # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  
+                  ErrorCode:
+                    description: Error Code
+                    type: string
+                    enum:
+                    - amountIsTooSmall
+                    - notEnoughBalance
+                  
+                  transactionContext:
+                    description: The transaction context which will be passed to the [POST] /api/sign
+                    type: string
+                  
+        default:
+          $ref : '#/components/schemas/genericError'
+      
+              
+                  
         
           
 
