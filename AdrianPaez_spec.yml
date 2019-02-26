@@ -120,6 +120,43 @@ paths:
         default:
           $ref: '#/components/schemas/genericError'
 
+  /api/transactions/history/to/{address}?take=integer&[afterHash=string]:
+    get:
+      summary: Get history to address
+      description: Should return completed transactions that transfer fund to the address and that were broadcasted after the transaction with the hash equal to the `afterHash`. If `afterHash` is empty, transactions should be read from the beginning. Should include all transactions broadcasted even those not going through `/transaction/broadcast/*` API endpoints. If there are no transactions to return, empty array should be returned. Amount of the returned transactions should not exceed take.
+      
+      security: 
+      - CsrfTokenAuth: []
+      
+      parameters: 
+        - name: address
+          in: path
+          required: true
+          description: Address from which you want to know the history
+          schema:
+            type: string
+        - name: take
+          in: query
+          required: false
+          description: Maximum return transactions
+          schema:
+            type: integer
+        - name: afterHash
+          in: query
+          required: false
+          description: Address of the transaction after which you have to search
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/transaction'
 # To remember :
 #  Every post method should use security schema.
 #  Feel free to use and reuse components
