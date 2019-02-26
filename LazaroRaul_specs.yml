@@ -1,0 +1,72 @@
+openapi: 3.0.0
+
+info:
+  title: Python to .Net
+  description: Still whitout description.
+  version: 0.25.1
+servers:
+- url: http://www.skycoin.net
+  description: Main Skycoin server
+- url: http://staging.node.skycoin.net
+  description: Internal staging server for developer.
+components:
+  securitySchemes:
+    CsrfTokenAuth:        # arbitrary name for the security scheme
+      type: apiKey
+      in: header       # can be "header", "query" or "cookie"
+      name: X-CSRF-TOKEN  # name of the header, query parameter or cookie
+  schemas:
+    genericError:
+      description: This is a generic error that should be default response
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int64
+        message:
+          type: string
+
+paths:
+  /api/transactions/broadcast:
+    post:
+      summary: Broadcast the signed transaction.
+      description: Should broadcast the signed transaction. Result code can be evaluated synchronously or returned asynchronously in the [GET] /api/transactions/broadcast/* response with error code.
+      security: 
+      - CsrfTokenAuth: []
+
+      requestBody:
+        description: 'A JSON object containing: Operation ID. The signed transaction returned by the [POST] /api/sign'
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                operationId:
+                  type: string
+                  description: Operation ID.
+                signedTransaction:
+                  type: string
+                  description: The signed transaction returned by the [POST] /api/sign.
+                  
+      responses:
+        '200': # status code
+          description: Error code.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorCode:
+                    type: string
+                    enum:
+                    - amountIsTooSmall
+                    - notEnoughBalance
+                    description: Error code. Can be empty. Should be non empty if an error that match one of the listed code is occured. For other errors use HTTP status codes.
+        default:
+          $ref : '#/components/schemas/genericError'
+
+# To remember :
+#  Every post method should use security schema.
+#  Feel free to use and reuse components
+#  I think, at some point, someone should use oneOf and anyOf, pls take a look
