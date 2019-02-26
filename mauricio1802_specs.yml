@@ -1,0 +1,93 @@
+openapi: 3.0.0
+info:
+  title: Python to .Net
+  description: Still whitout description.
+  version: 0.25.1
+servers:
+- url: http://www.skycoin.net
+  description: Main Skycoin server
+- url: http://staging.node.skycoin.net
+  description: Internal staging server for developer.
+components:
+  securitySchemes:
+    CsrfTokenAuth:        # arbitrary name for the security scheme
+      type: apiKey
+      in: header       # can be "header", "query" or "cookie"
+      name: X-CSRF-TOKEN  # name of the header, query parameter or cookie
+  schemas:
+    genericError:
+      description: This is a generic error that should be default response
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int64
+        message:
+          type: string
+    
+    
+      
+paths:
+  /api/transactions/single:           #issue 8
+    post:
+      summary: Build single transaction
+      description: Build not signed single transaction if was't builded before
+      
+      security:
+      - CsrfTokenAuth: []
+
+      requestBody:
+        required: true
+        description: Transaction object
+        content:
+          application/json:
+            schema:
+              description: Object representing the transaction
+              type: object
+              properties:
+                operationId:
+                  description: Operation ID
+                  type: string
+                fromAddress: 
+                  type: string
+                  description: Source address
+                toAddress:
+                  type: string
+                  description: Destination address
+                assetId:
+                  type: string
+                  description: Asset ID to transfer
+                includeFee:
+                  type: boolean
+                  description: Ignored. No Fiber coin implements this ... yet
+                amount: 
+                  type: string
+                  description: Amount to transfer. Integer as string, aligned to the asset accuracy. Actual value can be calculated as x = amount / (10 ^ asset.Accuracy)
+      
+      responses:
+        '200':    # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  
+                  ErrorCode:
+                    description: Error Code
+                    type: string
+                    enum:
+                    - amountIsTooSmall
+                    - notEnoughBalance
+                  
+                  transactionContext:
+                    description: The transaction context which will be passed to the [POST] /api/sign
+                    type: string
+                  
+        default:
+          $ref : '#/components/schemas/genericError'
+
+# To remember :
+#  Every post method should use security schema.
+#  Feel free to use and reuse components
+#  I think, at some point, someone should use oneOf and anyOf, pls take a look
