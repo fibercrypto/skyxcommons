@@ -219,7 +219,34 @@ paths:
           $ref : '#/components/schemas/genericError'
       
               
-                  
+  /api/IsAlive:
+    get:
+      summary:  Return some general service info
+      description: Check if the server is running correctly
+      responses:
+        '200':    #status code
+          description:  A JSON object containing information about the service
+          content:
+            application/json:
+              schema:
+                type: object
+                
+                properties:
+                  name:
+                    description: Name of the service
+                    type: string
+                  version:
+                    description: Version of the service
+                    type: string
+                  env:
+                    description: ENV_INFO environment variable value
+                    type: string
+                  isDebug:
+                    description: Flag, wich indicates if the service is built in the debug configuration or not
+                    type: boolean
+        
+        default:
+         $ref: '#/components/schemas/genericError'
         
           
 
