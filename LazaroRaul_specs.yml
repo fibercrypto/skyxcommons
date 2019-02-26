@@ -48,7 +48,7 @@ paths:
                 signedTransaction:
                   type: string
                   description: The signed transaction returned by the [POST] /api/sign.
-                  
+
       responses:
         '200': # status code
           description: Error code.
@@ -65,6 +65,34 @@ paths:
                     description: Error code. Can be empty. Should be non empty if an error that match one of the listed code is occured. For other errors use HTTP status codes.
         default:
           $ref : '#/components/schemas/genericError'
+
+  /api/addresses/{address}/explorer-url:
+    get:
+      summary: Return one or many blockchain explorer URLs.
+      description: Should return one or many blockchain explorer URLs for the given address.
+      security: 
+      - CsrfTokenAuth: []
+
+      parameters: 
+      - name: address
+        in: path
+        description: Address for find blockchain explorer URLs
+        required: true
+        schema:
+          type: string
+
+      responses:
+        '200':
+          description: Blockchain explorer URL for the given address
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        default:
+          $ref : '#/components/schemas/genericError'
+
 
 # To remember :
 #  Every post method should use security schema.
