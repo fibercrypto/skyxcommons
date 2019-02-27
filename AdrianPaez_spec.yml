@@ -120,6 +120,8 @@ paths:
           type: string
           
       responses:
+        '200':
+          description: POST is OK
         default:
           $ref: '#/components/schemas/genericError'
 
