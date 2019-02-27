@@ -63,7 +63,7 @@ paths:
 
       responses:
         '200':
-          description: Should create a new wallet (address) in the blockchain
+          description: The private key, public address and address context for the wallet created.
           content:
             application/json:
               schema:
