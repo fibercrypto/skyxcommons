@@ -31,10 +31,9 @@ components:
       properties:
         operationId:
           description: Operation ID. Can be empty. Should be not empty for  ransactions that broadcasted using this Blockchain.Api
-          type: guid
+          type: string
         timespam:
           description: Transaction moment as ISO 8601 in UTC
-          format: date-time
           type: string
         fromAddress:
           description: Source address
@@ -125,7 +124,7 @@ paths:
         default:
           $ref: '#/components/schemas/genericError'
 
-  /api/transactions/history/to/{address}?take=integer&[afterHash=string]:
+  /api/transactions/history/to/{address}:
     get:
       summary: Get history to address
       description: Should return completed transactions that transfer fund to the address and that were broadcasted after the transaction with the hash equal to the `afterHash`. If `afterHash` is empty, transactions should be read from the beginning. Should include all transactions broadcasted even those not going through `/transaction/broadcast/*` API endpoints. If there are no transactions to return, empty array should be returned. Amount of the returned transactions should not exceed take.
@@ -155,7 +154,7 @@ paths:
 
       responses:
         '200':
-          description: 
+          description: Transactions array.
           content:
             application/json:
               schema:
