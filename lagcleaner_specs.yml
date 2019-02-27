@@ -1,0 +1,51 @@
+openapi: 3.0.0
+info:
+  title: Python to .Net
+  description: Still whitout description.
+  version: 0.25.1
+servers:
+- url: http://www.skycoin.net
+  description: Main Skycoin server
+- url: http://staging.node.skycoin.net
+  description: Internal staging server for developer.
+components:
+  securitySchemes:
+    CsrfTokenAuth:        # arbitrary name for the security scheme
+      type: apiKey
+      in: header       # can be "header", "query" or "cookie"
+      name: X-CSRF-TOKEN  # name of the header, query parameter or cookie
+  schemas:
+    genericError:
+      description: This is a generic error that should be default response
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int64
+        message:
+          type: string
+paths:
+# - 16
+    /api/transactions/history/to/{address}/observation:
+      post:
+        parameters:
+          - in: path
+            name: address
+            required: true
+            schema:
+              type: string
+            description: Address to which funds are transferred.
+
+        summary: Starts observation of the transactions.
+        
+        description: Should starts observation of the transactions that transfer fund to the address, and affect the result of the [GET] /api/transactions/history/to/{address}.
+        
+        security:
+          - CsrfTokenAuth: []
+        
+        responses:
+          '200':
+            description: Successfully stored in observation list.
+
+          default:
+            $ref: '#/components/schemas/genericError'
