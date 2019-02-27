@@ -27,6 +27,74 @@ components:
           type: string
 
 paths:
+  /api/transactions/broadcast/single/{operationId}:
+    get:
+      summary: Return broadcasted transaction by the operationId.
+      description: Should return broadcasted transaction by the operationId . All transactions with single input and output, that were broadcasted by the [POST] /api/transactions/broadcast should be available here. 
+      
+      parameters:
+      - name: operationId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Operation Id.
+      
+      responses:
+        '200':
+          description: Broadcasted transaction by the opreationId.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  operationId:
+                    type: string
+                    description: Operation ID.
+                    
+                  state:
+                    type: string
+                    enum:
+                    - inProgress
+                    - completed
+                    - failed
+                    description: State of the transaction.
+                    
+                  timestamp:
+                    type: string
+                    description: 'Transaction moment as ISO 8601 in UTC.'
+                  
+                  amount:
+                    type: string
+                    description: Amount without fee. Is integer as string, aligned to the asset accuracy. Should be non empty if the  state is  Completed.
+                  
+                  fee:
+                    type: string
+                    description: Fee should be zero if the  state is  Completed.
+                  
+                  hash:
+                    type: string
+                    description: Transaction hash as base64 string. Can be empty. Should be non empty if the  state is  Completed.
+                    
+                  error:
+                    type: string
+                    description: Error description. Can be empty. Should be non empty if the  state is  Error.
+                    
+                  errorCode:
+                    type: string
+                    enum:
+                    - unknown
+                    - amountIsTooSmall
+                    - notEnoughBalance
+                    description: Error code. Can be empty. Should be non empty if the state is Failed.
+                    
+                  block:
+                    type: integer
+                    format: int64
+                    description: Incremental ID of the moment, when the transaction state changing is detected. It should be the same sequence as for block in the  [GET] /api/balances response. In other words block number/height.
+        default:
+          $ref : '#/components/schemas/genericError'    
+
   /api/transactions/broadcast/many-inputs/{operationId}:
     get:
       summary: 'Return broadcasted transaction by the opreationId.'
@@ -62,7 +130,6 @@ paths:
                     
                   timestamp:
                     type: string
-                    format: date-time
                     description: 'Transaction moment as ISO 8601 in UTC.'
                   
                   inputs:
@@ -109,7 +176,7 @@ paths:
           
           
         default:
-          $ref: '#/components/schemas/genericError'
+          $ref : '#/components/schemas/genericError'
 
   /api/transactions/broadcast/many-outputs/{operationId}:
     get:
@@ -151,7 +218,6 @@ paths:
                     
                   timestamp:
                     type: string
-                    format: date-time
                     description: 'Transaction moment as ISO 8601 in UTC.'
                     
                   fromAddress:
