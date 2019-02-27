@@ -98,6 +98,8 @@ paths:
             type: string
       
       responses:
+        '200':
+          description: DELETE is OK
         default:
           $ref: '#/components/schemas/genericError'
           
