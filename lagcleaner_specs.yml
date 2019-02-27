@@ -73,3 +73,27 @@ paths:
 
           default:
             $ref: '#/components/schemas/genericError'
+# - 18
+    /api/transactions/broadcast/{operationId}:
+      delete:
+        parameters:
+          - in: path
+            name: operationId
+            required: true
+            schema:
+              type: string
+            description: Specified transaction from the broadcasted transactions.
+          
+        summary: Remove an specified transaction from the broadcasted transactions.
+        
+        description: Should remove specified transaction from the broadcasted transactions, and affect transactions returned by the [GET] /api/transactions/broadcast/{operatioId}.
+        
+        security:
+          - CsrfTokenAuth: []
+        
+        responses:
+          '200':
+            description: Successfully removed from broadcasted transactions list.
+    
+          default:
+            $ref: '#/components/schemas/genericError'
