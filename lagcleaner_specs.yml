@@ -49,3 +49,27 @@ paths:
 
           default:
             $ref: '#/components/schemas/genericError'
+# - 17
+    /api/transactions/history/from/{address}/observation:
+      post:
+        parameters:
+          - in: path
+            name: address
+            required: true
+            schema:
+              type: string
+            description: Address from which funds are transferred.
+        
+        summary: Starts observation of the transactions.
+        
+        description: Should starts observation of the transactions that transfer fund from the address, and affect the result of the [GET] /api/transactions/history/from/{address}.
+        
+        security:
+          - CsrfTokenAuth: []
+        
+        responses:
+          '200':
+            description: Successfully stored in observation list.
+
+          default:
+            $ref: '#/components/schemas/genericError'
