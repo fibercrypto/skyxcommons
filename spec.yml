@@ -25,33 +25,6 @@ components:
         message:
           type: string
 paths:
-openapi: 3.0.0
-info:
-  title: Python to .Net
-  description: Still without description.
-  version: 0.25.1
-servers:
-- url: http://www.skycoin.net
-  description: Main Skycoin server
-- url: http://staging.node.skycoin.net
-  description: Internal staging server for developer.
-components:
-  securitySchemes:
-    CsrfTokenAuth:        # arbitrary name for the security scheme
-      type: apiKey
-      in: header       # can be "header", "query" or "cookie"
-      name: X-CSRF-TOKEN  # name of the header, query parameter or cookie
-  schemas:
-    genericError:
-      description: This is a generic error that should be default response
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int64
-        message:
-          type: string
-paths:
   /api/transactions/history/from/{address}:
     get:
       summary: Get history from address.
