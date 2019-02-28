@@ -25,3 +25,75 @@ components:
         message:
           type: string
 paths:
+# - 16
+    /api/transactions/history/to/{address}/observation:
+      post:
+        parameters:
+          - in: path
+            name: address
+            required: true
+            schema:
+              type: string
+            description: Address to which funds are transferred.
+
+        summary: Starts observation of the transactions.
+        
+        description: Should starts observation of the transactions that transfer fund to the address, and affect the result of the [GET] /api/transactions/history/to/{address}.
+        
+        security:
+          - CsrfTokenAuth: []
+        
+        responses:
+          '200':
+            description: Successfully stored in observation list.
+
+          default:
+            $ref: '#/components/schemas/genericError'
+# - 17
+    /api/transactions/history/from/{address}/observation:
+      post:
+        parameters:
+          - in: path
+            name: address
+            required: true
+            schema:
+              type: string
+            description: Address from which funds are transferred.
+        
+        summary: Starts observation of the transactions.
+        
+        description: Should starts observation of the transactions that transfer fund from the address, and affect the result of the [GET] /api/transactions/history/from/{address}.
+        
+        security:
+          - CsrfTokenAuth: []
+        
+        responses:
+          '200':
+            description: Successfully stored in observation list.
+
+          default:
+            $ref: '#/components/schemas/genericError'
+# - 18
+    /api/transactions/broadcast/{operationId}:
+      delete:
+        parameters:
+          - in: path
+            name: operationId
+            required: true
+            schema:
+              type: string
+            description: Specified transaction from the broadcasted transactions.
+          
+        summary: Remove an specified transaction from the broadcasted transactions.
+        
+        description: Should remove specified transaction from the broadcasted transactions, and affect transactions returned by the [GET] /api/transactions/broadcast/{operatioId}.
+        
+        security:
+          - CsrfTokenAuth: []
+        
+        responses:
+          '200':
+            description: Successfully removed from broadcasted transactions list.
+    
+          default:
+            $ref: '#/components/schemas/genericError'
