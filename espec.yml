@@ -25,13 +25,63 @@ components:
         message:
           type: string
 paths:
-  /somePath:
-    get:
-      summary: This is a example of a get method.
-      description: Some description, is not optional.
+  /api/transactions/broadcast:
+    post:
+      summary: Broadcast the signed transaction.
+      description: Should broadcast the signed transaction. Result code can be evaluated synchronously or returned asynchronously in the `[GET] /api/transactions/broadcast/*` response with error code.
+      security: 
+      - CsrfTokenAuth: []
+
+      requestBody:
+        description: 'A JSON object containing: Operation ID. The signed transaction returned by the [POST] /api/sign'
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                operationId:
+                  type: string
+                  description: Operation ID.
+                signedTransaction:
+                  type: string
+                  description: The signed transaction returned by the [POST] /api/sign.
+
       responses:
-        '200':    # status code
-          description: A response of arrays
+        '200': # status code
+          description: Error code.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorCode:
+                    type: string
+                    enum:
+                    - amountIsTooSmall
+                    - notEnoughBalance
+                    description: Error code. Can be empty. Should be non empty if an error that match one of the listed code is occured. For other errors use HTTP status codes.
+        default:
+          $ref : '#/components/schemas/genericError'
+
+  /api/addresses/{address}/explorer-url:
+    get:
+      summary: Return one or many blockchain explorer URLs.
+      description: Should return one or many blockchain explorer URLs for the given address.
+      security: 
+      - CsrfTokenAuth: []
+
+      parameters: 
+      - name: address
+        in: path
+        description: Address for find blockchain explorer URLs.
+        required: true
+        schema:
+          type: string
+
+      responses:
+        '200':
+          description: Blockchain explorer URLs for the given address.
           content:
             application/json:
               schema:
@@ -40,22 +90,61 @@ paths:
                   type: string
         default:
           $ref : '#/components/schemas/genericError'
-    post:
-      summary: This is a example of a post method.
-      description: Some description, is not optional.
 
-      security:
+  /api/transactions/many-outputs:
+    post:
+      summary: Build not signed transaction with many outputs.
+      description: Should build not signed transaction with many outputs. If the transaction with the specified `operationId` has already been built by one of the `[POST] /api/transactions/*` call, it should be ignored and regular response (as in the first request) should be returned. Fee should be added to the specified amount.
+      security: 
       - CsrfTokenAuth: []
 
+      requestBody:
+        description: 'A JSON object containing: Operation ID. Source address. Destinations. Asset ID to transfer, defaults to SKY'
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                operationId:
+                  type: string
+                  description: Operation ID.
+                fromAddress:
+                  type: string
+                  description: Source address.
+                outputs:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      toAddress:
+                        type: string
+                        description: Destination address.
+                      amount:
+                        type: string
+                        description: Amount to transfer to the  toAddress. Integer as string, aligned to the asset accuracy. Actual value can be calculated as x = amount / (10 ^ asset.Accuracy).
+                  description: Destinations.
+                assetId:
+                  type: string
+                  description: Asset ID to transfer, defaults to SKY.
+
       responses:
-        '200':    # status code
-          description: A response of arrays
+        '200': # status code
+          description: Error code. The transaction context
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
+                type: object
+                properties:
+                  errorCode:
+                    type: string
+                    enum:
+                    - amountIsTooSmall
+                    - notEnoughBalance
+                    description: Error code. Can be empty. Should be non empty if an error that match one of the listed code is occured. For other errors use HTTP status codes.
+                  transactionContext:
+                    type: string
+                    description: The transaction context in the blockchain specific format, which will be passed to the [POST] /api/sign. Should be not empty when result is successful.
         default:
           $ref : '#/components/schemas/genericError'
 
