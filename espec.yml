@@ -160,3 +160,5 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/transaction'
+        default:
+          $ref: '#/components/schemas/genericError'
