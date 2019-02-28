@@ -24,4 +24,233 @@ components:
           format: int64
         message:
           type: string
+    
+    
+      
 paths:
+  /api/transactions/single:           #issue 8
+    post:
+      summary: Build not signed single transaction
+      description: Should build not signed transaction to transfer from the single source to the single destination. If the transaction with the specified operationId has already been built by one of the [POST] /api/transactions/* call, it should be ignored and regular response (as in the first request) should be returned.
+      
+      security:
+      - CsrfTokenAuth: []
+
+      requestBody:
+        required: true
+        description: Transaction object
+        content:
+          application/json:
+            schema:
+              description: Object representing the transaction
+              type: object
+              properties:
+                operationId:
+                  description: Operation ID
+                  type: string
+                fromAddress: 
+                  type: string
+                  description: Source address
+                toAddress:
+                  type: string
+                  description: Destination address
+                assetId:
+                  type: string
+                  description: Asset ID to transfer
+                includeFee:
+                  type: boolean
+                  description: Ignored. No Fiber coin implements this ... yet
+                amount: 
+                  type: string
+                  description: Amount to transfer. Integer as string, aligned to the asset accuracy. Actual value can be calculated as x = amount / (10 ^ asset.Accuracy)
+                
+             
+              
+                
+
+      responses:
+        '200':    # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  
+                  ErrorCode:
+                    description: Error Code
+                    type: string
+                    enum:
+                    - amountIsTooSmall
+                    - notEnoughBalance
+                  
+                  transactionContext:
+                    description: The transaction context which will be passed to the [POST] /api/sign
+                    type: string
+                  
+        default:
+          $ref : '#/components/schemas/genericError'
+          
+          
+  /api/balances:
+    get:
+      summary: Return balance of the observed wallets
+      description: Should return balances of the observed wallets with non zero balances. Wallets balance observation is enabled by the [POST] /api/balances/{address}/observation and disabled by the [DELETE] /api/balances/{address}/observation.
+      parameters:
+        - name: take
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: Limit amount of the returned values
+        - name: continuation
+          in: query
+          required: false
+          schema:
+            type: string
+          description: context of the previous request
+          
+      responses:
+        '200':    # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isValid:
+                    description: Indicate if the address is valid
+                    type: boolean
+                  
+                  continuation:
+                    description: Continuation token 
+                    type: string
+                  
+                  items:
+                    description: Current batch of items
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        address:
+                          description: Wallet address
+                          type: string
+                        assetId:
+                          description: Asset ID
+                          type: string
+                       
+                        balance:
+                          description: Balance is integer as string, aligned to the asset accuracy. Actual value can be calculated as x = sourceBalance * (10 ^ asset.Accuracy)Balance is integer as string, aligned to the asset accuracy. Actual value can be calculated as x = sourceBalance * (10 ^ asset.Accuracy)
+                          type: string
+                        block:
+                          description: Incremental ID of the moment, when balance is updated. It should be the same sequence as for block in the [GET] /api/transactions/broadcast/* responses
+                          type: integer
+                        
+                        
+                        
+                  
+        default:
+          $ref : '#/components/schemas/genericError'
+          
+          
+  /api/transaction/many-inputs:
+    post:
+      summary: Build not signed transactions with many inputs.
+      description: Should build not signed transaction with many inputs. If the transaction with the specified operationId has already been built by one of the [POST] /api/transactions/* call, it should be ignored
+      
+      security:
+        - CsrfTokenAuth: []
+    
+      requestBody:
+        required: true
+        description: Transaction object
+        content:
+          application/json:
+            schema:
+              description: ewr
+              type: object
+              properties:
+                operationId:
+                  description: Operation ID
+                  type: string
+              
+                inputs:
+                  description: Sources
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      fromAddress:
+                        description: Source Address
+                        type: string
+                      amount:
+                        description: Amount to transfer from the  fromAddress. Integer as string, aligned to the droplet precision exponent. Actual value can be calculated as x = amount / (10 ^ asset.Accuracy).
+                        type: string
+
+                toAddress: 
+                  description: Destination Address
+                  type: string
+                assetId: 
+                  description: Ticker ID of the fiber coin, SKY by default
+                  type: string
+                  
+                  
+      responses:
+        '200':    # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  
+                  ErrorCode:
+                    description: Error Code
+                    type: string
+                    enum:
+                    - amountIsTooSmall
+                    - notEnoughBalance
+                  
+                  transactionContext:
+                    description: The transaction context which will be passed to the [POST] /api/sign
+                    type: string
+                  
+        default:
+          $ref : '#/components/schemas/genericError'
+      
+              
+  /api/IsAlive:
+    get:
+      summary:  Return some general service info
+      description: Check if the server is running correctly
+      responses:
+        '200':    #status code
+          description:  A JSON object containing information about the service
+          content:
+            application/json:
+              schema:
+                type: object
+                
+                properties:
+                  name:
+                    description: Name of the service
+                    type: string
+                  version:
+                    description: Version of the service
+                    type: string
+                  env:
+                    description: ENV_INFO environment variable value
+                    type: string
+                  isDebug:
+                    description: Flag, wich indicates if the service is built in the debug configuration or not
+                    type: boolean
+        
+        default:
+         $ref: '#/components/schemas/genericError'
+        
+          
+
+# To remember :
+#  Every post method should use security schema.
+#  Feel free to use and reuse components
+#  I think, at some point, someone should use oneOf and anyOf, pls take a look
