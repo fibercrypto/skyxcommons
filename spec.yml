@@ -378,8 +378,6 @@ paths:
                    If `afterHash` is empty, transactions should be read from the beginning. <br>
                     Should include all transactions broadcasted even if not going through `/transaction/broadcast/*` API endpoints. <br>
                     If there are no transactions to return, empty array should be returned. Amount of the returned transactions should not exceed `take` .
-      security: 
-      - CsrfTokenAuth: []
 
       parameters: 
       - name: address
@@ -469,6 +467,9 @@ paths:
       
       description: Should stop observation of the transactions that transfer fund from the address . Should affect result of the [GET] /api/transactions/history/from/{address}.
       
+      security: 
+      - CsrfTokenAuth: []
+      
       parameters: 
       - name: address
         in: path
@@ -520,6 +521,9 @@ paths:
       
       description: Should stop observation of the transactions that transfer fund to the address . Should affect result of the '[GET] /api/transactions/history/to/{address}' .
       
+      security: 
+      - CsrfTokenAuth: []
+      
       parameters: 
       - name: address
         in: path
@@ -547,8 +551,6 @@ paths:
       summary: Valid address API endpoint.
       description: Should check and return address validity.<br>
                   Should check and return wallet address validity
-      security: 
-      - CsrfTokenAuth: []
 
       parameters: 
       - name: address
@@ -616,8 +618,6 @@ paths:
     get:
       summary: Return one or many blockchain explorer URLs.
       description: Should return one or many blockchain explorer URLs for the given address.
-      security: 
-      - CsrfTokenAuth: []
 
       parameters: 
       - name: address
