@@ -126,11 +126,7 @@ paths:
   /api/transactions/history/to/{address}:
     get:
       summary: Get history to address
-      description: Should return completed transactions that transfer fund to the address and that were broadcasted after the transaction with the hash equal to the `afterHash`. If `afterHash` is empty, transactions should be read from the beginning. Should include all transactions broadcasted even those not going through `/transaction/broadcast/*` API endpoints. If there are no transactions to return, empty array should be returned. Amount of the returned transactions should not exceed take.
-      
-      security: 
-      - CsrfTokenAuth: []
-      
+      description: Should return completed transactions that transfer fund to the address and that were broadcasted after the transaction with the hash equal to the `afterHash`. If `afterHash` is empty, transactions should be read from the beginning. Should include all transactions broadcasted even those not going through `/transaction/broadcast/*` API endpoints. If there are no transactions to return, empty array should be returned. Amount of the returned transactions should not exceed take.     
       parameters: 
         - name: address
           in: path
