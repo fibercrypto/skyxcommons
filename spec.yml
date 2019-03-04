@@ -381,4 +381,168 @@ paths:
                     type: boolean
         
         default:
-         $ref: '#/components/schemas/genericError'    
+         $ref: '#/components/schemas/genericError'  
+         
+  /api/transactions/history/from/{address}:
+    get:
+      summary: Get history from address.
+      description: Should return completed transactions that transfer fund from the `address` and that were broadcasted after the transaction with the `hash` equal to the `afterHash`.<br>
+                   If `afterHash` is empty, transactions should be read from the beginning. <br>
+                    Should include all transactions broadcasted even if not going through `/transaction/broadcast/*` API endpoints. <br>
+                    If there are no transactions to return, empty array should be returned. Amount of the returned transactions should not exceed `take` .
+      security: 
+      - CsrfTokenAuth: []
+
+      parameters: 
+      - name: address
+        in: path
+        description: Address for find blockchain explorer URLs
+        required: true
+        schema:
+          type: string
+      - name: take
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: afterHash
+        in: query
+        required: false
+        schema:
+          type: string
+
+      responses:
+        '200':
+          description: Operation ID. The transaction Id.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  properties:
+                    operationId:
+                      type: string
+                      description: Can be empty. <br>
+                                  Should be not empty for transactions that broadcasted using this API.
+                    timestamp:
+                      type: string
+                      format: date-time
+                      description: 'Transaction moment as ISO 8601 in UTC'
+  
+                    fromAddress:
+                      type: string
+                      description: Source address.
+                      
+                    toAddress:
+                      type: string
+                      description: Destination address.
+  
+                    assetId:
+                      type: string
+                      description: Asset ID e.g. SKY
+                      
+                    amount:
+                      type: string
+                      description: 'Amount without fee. Is integer as string, aligned to the asset accuracy. Actual value can be calculated as `x = sourceAmount * (10 ^ asset.Accuracy)`'
+                      
+                    hash:
+                      type: string
+                      description: Transaction hash as base64 string
+                      
+        default:
+          $ref : '#/components/schemas/genericError'
+                      
+  /api/transactions/history/from/{address}/observation:
+    delete:
+      summary: Stop observation from address
+      
+      description: Should stop observation of the transactions that transfer fund from the address . Should affect result of the [GET] /api/transactions/history/from/{address}.
+      
+      parameters: 
+      - name: address
+        in: path
+        description: Address from stop being observed
+        required: true
+        schema:
+          type: string
+          
+      responses:
+        '200':  
+          description: "Ok"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  signedTransaction:
+                    type: string
+    
+        default:
+          $ref : '#/components/schemas/genericError'
+                  
+  /api/transactions/history/to/{address}/observation:
+    delete:
+      summary: Stop observation to address
+      
+      description: Should stop observation of the transactions that transfer fund to the address . Should affect result of the '[GET] /api/transactions/history/to/{address}' .
+      
+      parameters: 
+      - name: address
+        in: path
+        description: Address to stop being observed
+        required: true
+        schema:
+          type: string
+          
+      responses:
+        '200':  
+          description: "Ok"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  signedTransaction:
+                    type: string
+    
+        default:
+          $ref : '#/components/schemas/genericError'
+
+  /api/addresses/{address}/validity:
+    get:
+      summary: Valid address API endpoint.
+      description: Should check and return address validity.<br>
+                  Should check and return wallet address validity
+      security: 
+      - CsrfTokenAuth: []
+
+      parameters: 
+      - name: address
+        in: path
+        description: Address for find blockchain explorer URLs
+        required: true
+        schema:
+          type: string
+
+      responses:
+        '200':
+          description: Validation. The Validation value.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isValid:
+                    type: boolean
+                    description: Flag, which indicates that the address is valid
+                   
+        default:
+          $ref : '#/components/schemas/genericError'
+          
+# To remember :
+#  Every post method should use security schema.
+#  Feel free to use and reuse components
+#  I think, at some point, someone should use oneOf and anyOf, pls take a look
+
+        
+      
