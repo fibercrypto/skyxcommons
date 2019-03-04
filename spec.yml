@@ -74,3 +74,25 @@ paths:
           description: DELETE is OK
         default:
           $ref: '#/components/schemas/genericError'
+    
+    post:
+      summary: Create balance observation
+      
+      description: Should remember the wallet address to observe the wallet balance and return it in the [GET] /api/balances , if the balance is non zero.
+      
+      security: 
+      - CsrfTokenAuth: []
+      
+      parameters: 
+      - name: address
+        description: Address of the wallet
+        in: path
+        required: true
+        schema:
+          type: string
+          
+      responses:
+        '200':
+          description: POST is OK
+        default:
+          $ref: '#/components/schemas/genericError'
