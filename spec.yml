@@ -24,6 +24,32 @@ components:
           format: int64
         message:
           type: string
+    
+    transaction:
+      description: Represents a transiction
+      type: object
+      properties:
+        operationId:
+          description: Operation ID. Can be empty. Should be not empty for ransactions that broadcasted using this Blockchain.Api
+          type: string
+        timespam:
+          description: Transaction moment as ISO 8601 in UTC
+          type: string
+        fromAddress:
+          description: Source address
+          type: string
+        toAddress:
+          description: Destination address
+          type: string
+        assetId:
+          description: Asset ID e.g. SKY
+          type: string
+        ammount:
+          description: Amount without fee. Is integer as string, aligned to the asset accuracy. Actual value can be calculated as x = sourceAmount * (10 ^ asset.Accuracy)
+          type: string
+        hash:
+          description: Transaction hash as base64 string
+          type: string
 paths:
   /api/wallets:
     post:
@@ -74,7 +100,7 @@ paths:
           description: DELETE is OK
         default:
           $ref: '#/components/schemas/genericError'
-    
+          
     post:
       summary: Create balance observation
       
@@ -94,5 +120,45 @@ paths:
       responses:
         '200':
           description: POST is OK
+        default:
+          $ref: '#/components/schemas/genericError'
+
+  /api/transactions/history/to/{address}:
+    get:
+      summary: Get history to address
+      description: Should return completed transactions that transfer fund to the address and that were broadcasted after the transaction with the hash equal to the `afterHash`. If `afterHash` is empty, transactions should be read from the beginning. Should include all transactions broadcasted even those not going through `/transaction/broadcast/*` API endpoints. If there are no transactions to return, empty array should be returned. Amount of the returned transactions should not exceed take.
+      
+      security: 
+      - CsrfTokenAuth: []
+      
+      parameters: 
+        - name: address
+          in: path
+          required: true
+          description: Address from which you want to know the history
+          schema:
+            type: string
+        - name: take
+          in: query
+          required: false
+          description: Maximum return transactions
+          schema:
+            type: integer
+        - name: afterHash
+          in: query
+          required: false
+          description: Address of the transaction after which you have to search
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Transactions array.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/transaction'
         default:
           $ref: '#/components/schemas/genericError'
