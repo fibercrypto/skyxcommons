@@ -25,3 +25,30 @@ components:
         message:
           type: string
 paths:
+  /api/wallets:
+    post:
+      summary: Create wallet method.
+      description: Should create a new wallet (address) in the blockchain.
+
+      security:
+      - CsrfTokenAuth: []
+
+      responses:
+        '200':
+          description: The private key, public address and address context for the wallet created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  privateKey:
+                    description: Private key, which will be used to sign transactions by the [POST] /api/sign
+                    type: string
+                  publicAddress:
+                    description: Address which identifies the wallet in the blockchain
+                    type: string
+                  addressContext:
+                    description: Any non security sensitive data associated with wallet. This context will be passed to [POST] /api/transactions/*. Can be empty.
+                    type: string
+        default:
+          $ref : '#/components/schemas/genericError'
