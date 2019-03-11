@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p="api_core.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="src/api_core" t="IncludeRecursive">
+        <e p=".gitignore" t="Include" />
+        <e p="Attributes" t="Include">
+          <e p="ValidateModelStateAttribute.cs" t="Include" />
+        </e>
+        <e p="Controllers" t="Include">
+          <e p="DefaultApi.cs" t="Include" />
+        </e>
+        <e p="Dockerfile" t="Include" />
+        <e p="Filters" t="Include">
+          <e p="BasePathFilter.cs" t="Include" />
+          <e p="GeneratePathParamsValidationFilter.cs" t="Include" />
+        </e>
+        <e p="Models" t="Include">
+          <e p="ApitransactionmanyinputsInputs.cs" t="Include" />
+          <e p="ApitransactionsmanyoutputsOutputs.cs" t="Include" />
+          <e p="GenericError.cs" t="Include" />
+          <e p="InlineObject.cs" t="Include" />
+          <e p="InlineObject1.cs" t="Include" />
+          <e p="InlineObject2.cs" t="Include" />
+          <e p="InlineObject3.cs" t="Include" />
+          <e p="InlineObject4.cs" t="Include" />
+          <e p="InlineResponse200.cs" t="Include" />
+          <e p="InlineResponse2001.cs" t="Include" />
+          <e p="InlineResponse20010.cs" t="Include" />
+          <e p="InlineResponse20010Outputs.cs" t="Include" />
+          <e p="InlineResponse2002.cs" t="Include" />
+          <e p="InlineResponse2002Items.cs" t="Include" />
+          <e p="InlineResponse2003.cs" t="Include" />
+          <e p="InlineResponse2004.cs" t="Include" />
+          <e p="InlineResponse2005.cs" t="Include" />
+          <e p="InlineResponse2006.cs" t="Include" />
+          <e p="InlineResponse2007.cs" t="Include" />
+          <e p="InlineResponse2008.cs" t="Include" />
+          <e p="InlineResponse2009.cs" t="Include" />
+          <e p="InlineResponse2009Inputs.cs" t="Include" />
+          <e p="Transaction.cs" t="Include" />
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
+        <e p="Startup.cs" t="Include" />
+        <e p="api_core.csproj" t="IncludeRecursive" />
+        <e p="appsettings.json" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.1" t="Include">
+              <e p="api_core.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="wwwroot" t="Include">
+          <e p="README.md" t="Include" />
+          <e p="index.html" t="Include" />
+          <e p="openapi-original.json" t="Include" />
+          <e p="web.config" t="Include" />
+        </e>
+      </e>
+    </e>
+    <e p="$USER_HOME$/.Rider2018.2/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2018.2/system/resharper-host/local/Transient/ReSharperHost/v182/SolutionCaches/_api_core.542232915.00" t="ExcludeRecursive" />
+  </component>
+</project>
